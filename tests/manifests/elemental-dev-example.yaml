@@ -22,6 +22,7 @@ spec:
     machineGlobalConfig:
       etcd-expose-metrics: false
       profile: null
+      selinux: true
     machinePools:
       - controlPlaneRole: true
         etcdRole: true
