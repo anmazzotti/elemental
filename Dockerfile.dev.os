@@ -69,8 +69,8 @@ COPY framework/files/ /
 
 # Enable SELinux (The security=selinux arg is default on Micro, not on Tumbleweed)
 RUN sed -i "s/selinux=1/security=selinux selinux=1/g" /etc/elemental/bootargs.cfg
-# Enforce SELinux
-# RUN sed -i "s/enforcing=0/enforcing=1/g" /etc/elemental/bootargs.cfg
+# Enable selinux in enforcing mode
+RUN sed -i "s|^SELINUX=.*|SELINUX=enforcing|g" /etc/selinux/config
 
 # Add elemental-register
 COPY --from=register /usr/sbin/elemental-register /usr/sbin/elemental-register
@@ -106,7 +106,7 @@ RUN echo TIMESTAMP="`date +'%Y%m%d%H%M%S'`" >> /etc/os-release && \
     echo GRUB_ENTRY_NAME=\"Elemental Dev\" >> /etc/os-release
 
 # Rebuild initrd to setup dracut with the boot configurations
-RUN elemental init --force elemental-rootfs,elemental-sysroot,grub-config,dracut-config,cloud-config-essentials,elemental-setup,boot-assessment
+RUN elemental init --force elemental-rootfs,elemental-sysroot,grub-config,dracut-config,cloud-config-essentials,elemental-setup,boot-assessment,cloud-config-defaults
 
 # Good for validation after the build
 CMD /bin/bash
