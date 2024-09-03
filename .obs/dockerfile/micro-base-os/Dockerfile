@@ -51,6 +51,17 @@ RUN zypper --installroot /osimage in --no-recommends -y elemental
 # make derived containers possible
 RUN zypper --installroot /osimage in --no-recommends -y zypper
 
+# patch the system
+RUN zypper --installroot /osimage patch -y
+
+RUN mkdir -p /osimage/usr/share/elemental/
+
+# store patch info 
+RUN zypper --installroot /osimage patches > /osimage/usr/share/elemental/patches
+
+# store packages list
+RUN rpm --root /osimage -qa --qf "%{NAME}|%{EPOCH}|%{VERSION}|%{RELEASE}|%{ARCH}|%{DISTURL}|%{LICENSE}\n" | sort > /osimage/usr/share/elemental/packages
+
 FROM scratch as osimage
 
 COPY --from=host /osimage /
